@@ -97,24 +97,32 @@ struct Node {
 class Solution{
     public:
     vector<int> postOrder(Node* node) {
-        // With 2 stacks
-        stack<Node*> st1;
-        stack<Node*> st2;
+        // With 1 stack
+        stack<Node*> st;
         vector<int> ans;
-        st1.push(node);
-        while(!st1.empty()){
-            node = st1.top();
-            st1.pop();
-            st2.push(node);
-            if(node->left!=NULL)st1.push(node->left);
-            if(node->right!=NULL)st1.push(node->right);
+        Node* temp;
+        while(node!=NULL || !st.empty()){
+            if(node!=NULL){
+                st.push(node);
+                node = node->left;
+            }else{
+                temp = st.top()->right;
+                if(temp==NULL){
+                    temp = st.top();
+                    st.pop();
+                    ans.push_back(temp->data);
+                    while(!st.empty() && temp==st.top()->right){
+                        temp = st.top();
+                        st.pop();
+                        ans.push_back(temp->data);
+                    }
+                    
+                }else{
+                    node = temp;
+                }
+            }
         }
         
-        while(!st2.empty()){
-            node = st2.top();
-            st2.pop();
-            ans.push_back(node->data);
-        }
         return ans;
     }
 };
